@@ -57,11 +57,11 @@ def run(filename):
         
         
         o = command['op']
+
         if o == 'mesh':
             filename = command["args"][0] + ".obj"
             load_mesh(tmp, filename)
             matrix_mult(stack[-1], tmp)
-            print(tmp)
             draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
             tmp = []
 
