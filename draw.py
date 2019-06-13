@@ -5,11 +5,31 @@ import re
 
 def load_mesh(polygons, filename):
     file = open(filename, "r")
-    pts = []
     vertices = []
     faces = []
     for line in file:
-        print(line)
+        tokens = line.strip("").split(" ")
+        if tokens[0] == "v":
+            vertices.append( [ float(tokens[1]), float(tokens[2]), float(tokens[3]), 1.0 if len(tokens) == 4 else float(tokens[4]) ] )
+        elif tokens[0] == "f":
+            if len(tokens) == 4: # For triangles
+                v1 = int(tokens[1].split("/")[0])
+                v2 = int(tokens[2].split("/")[0])
+                v3 = int(tokens[3].split("/")[0])
+                faces.append( [v1, v2, v3] )
+            if len(tokens) == 5: # For quadrilaterals
+                v1 = int(tokens[1].split("/")[0])
+                v2 = int(tokens[2].split("/")[0])
+                v3 = int(tokens[3].split("/")[0])
+                v4 = int(tokens[4].split("/")[0])
+                faces.append( [v1, v2, v3] )
+                faces.append( [v1, v3, v4] )
+    for face in faces:
+        add_polygon(polygons, vertices[face[0]-1][0], vertices[face[0]-1][1], vertices[face[0]-1][2],
+                              vertices[face[1]-1][0], vertices[face[1]-1][1], vertices[face[1]-1][2],
+                              vertices[face[2]-1][0], vertices[face[2]-1][1], vertices[face[2]-1][2])
+
+
 
 
 def draw_scanline(x0, z0, x1, z1, y, screen, zbuffer, color):
