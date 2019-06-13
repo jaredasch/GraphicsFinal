@@ -32,6 +32,7 @@ def run(filename):
     ident( tmp )
 
     stack = [ [x[:] for x in tmp] ]
+    print(stack)
     screen = new_screen()
     zbuffer = new_zbuffer()
     tmp = []
@@ -39,6 +40,7 @@ def run(filename):
     consts = ''
     coords = []
     coords1 = []
+    print(type(symbols))
     symbols['.white'] = ['constants',
                          {'red': [0.2, 0.5, 0.5],
                           'green': [0.2, 0.5, 0.5],
@@ -62,14 +64,25 @@ def run(filename):
             print(tmp)
             draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
             tmp = []
+
+
+        elif o == "save_coord_system":
+            symbols[command["cs"]] = [i[:] for i in stack[-1]]
+            
         elif o == "push":
+            
             stack.append([i[:] for i in stack[-1]])
 
         elif o == "pop":
-            stack.pop()
+            print(stack)
+            print(stack.pop())
 
         elif o == "move":
-            M = make_translate(* command["args"])
+            if len(command["args"]) == 1:
+                a = command["args"][0]
+                M = make_translate(symbols[a])
+            else:  
+                M = make_translate(* command["args"])
             matrix_mult(stack[-1], M)
             stack[-1] = [i[:] for i in M]
 
@@ -94,9 +107,16 @@ def run(filename):
             stack[-1] = [i[:] for i in M]
 
         elif o == "sphere":
+            print(command)
+            if command["cs"]:
+                mult = symbols[command["cs"]]
+                print("used")
+            else:
+                mult = stack[-1]
+                print("default")
             args = [float(i) for i in command["args"][:4]]
             add_sphere(*[polygons]+ args +[ step_3d])
-            mult = stack[-1]
+            #mult = stack[-1]
             matrix_mult(mult, polygons)
             
             if(command['constants']):
