@@ -1,4 +1,4 @@
-import mdl
+import mdlA
 from display import *
 from matrix import *
 from draw import *
@@ -69,8 +69,7 @@ def run(filename):
         elif o == "save_coord_system":
             symbols[command["cs"]] = [i[:] for i in stack[-1]]
             
-        elif o == "push":
-            
+        elif o == "push":            
             stack.append([i[:] for i in stack[-1]])
 
         elif o == "pop":
@@ -107,13 +106,12 @@ def run(filename):
             stack[-1] = [i[:] for i in M]
 
         elif o == "sphere":
-            print(command)
             if command["cs"]:
                 mult = symbols[command["cs"]]
-                print("used")
+                #print("used")
             else:
                 mult = stack[-1]
-                print("default")
+                #print("default")
             args = [float(i) for i in command["args"][:4]]
             add_sphere(*[polygons]+ args +[ step_3d])
             #mult = stack[-1]
@@ -126,9 +124,17 @@ def run(filename):
             polygons = []
 
         elif o == "torus":
+            #print(command)
+            if command["cs"]:
+
+                mult = symbols[command["cs"]]
+            else:
+                mult = stack[-1]
+            #print ("here is m")
+            #print(mult)
             args = [float(i) for i in command["args"][:5]]
             add_torus(*[polygons] + args + [step_3d])
-            mult = stack[-1]
+            #mult = stack[-1]
             matrix_mult(mult, polygons)
             if(command['constants']):
                 draw_polygons(polygons, screen, zbuffer, view, ambient, light, symbols, command['constants'])
@@ -137,9 +143,13 @@ def run(filename):
             polygons = []
 
         elif o == "box":
+            #print(command)
+            if command["cs"]:
+                mult = symbols[command["cs"]]
+            else:
+                mult = stack[-1]
             args = [float(i) for i in command["args"][:6]]
-            add_box(*[polygons] + args )
-            mult = stack[-1]
+            add_box(*[polygons] + args )            
             matrix_mult(mult, polygons)
             if(command['constants']):
                 print(command["constants"])
@@ -149,9 +159,20 @@ def run(filename):
             polygons = []
 
         elif o == 'line':
-            args = [float(i) for i in command["args"]]
+            print(command)
+            if command["cs0"]:
+                cs0 = symbols[command["cs0"]]
+            else:
+                cs0 = stack[-1]
+            if command["cs1"]:
+                cs1 = symbols[command["cs1"]]
+            else:
+                cs1 = stack[-1]
+
+            args = [float(i) for i in command["args"]]            
             add_edge(* [edges] + args)
-            matrix_mult( stack[-1], edges )
+            matrix_mult( cs0, [edges[0]] )
+            matrix_mult( cs1, [edges[1]] )
             draw_lines(edges, screen, zbuffer, color)
             edges = []
 
