@@ -32,7 +32,6 @@ def run(filename):
     ident( tmp )
 
     stack = [ [x[:] for x in tmp] ]
-    print(stack)
     screen = new_screen()
     zbuffer = new_zbuffer()
     tmp = []
@@ -40,7 +39,6 @@ def run(filename):
     consts = ''
     coords = []
     coords1 = []
-    print(type(symbols))
     symbols['.white'] = ['constants',
                          {'red': [0.2, 0.5, 0.5],
                           'green': [0.2, 0.5, 0.5],
@@ -59,12 +57,11 @@ def run(filename):
         o = command['op']
 
         if o == 'mesh':
-            print(command)
+            # print(command)
             filename = command["args"][0] + ".obj"
             load_mesh(tmp, filename)
             matrix_mult(stack[-1], tmp)
             draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
-            print(symbols)
             tmp = []
 
 
@@ -76,8 +73,7 @@ def run(filename):
             stack.append([i[:] for i in stack[-1]])
 
         elif o == "pop":
-            print(stack)
-            print(stack.pop())
+            stack.pop()
 
         elif o == "move":
             if len(command["args"]) == 1:

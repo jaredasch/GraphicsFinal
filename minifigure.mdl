@@ -1,0 +1,7 @@
+push
+move 150 0 0
+scale 10 10 10
+rotate x -70
+rotate z 20
+mesh :minifigure
+save minifigure.png

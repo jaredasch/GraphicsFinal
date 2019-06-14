@@ -1,6 +1,8 @@
 constants shiny_purple 0.3 0.2 0.8 0.3 0 0 0.3 0.2 0.8
 push
-move 200 200 0
-scale 25 25 25
+move 250 250 0
+scale 50 50 50
+rotate x 30
+rotate y -30
 mesh :teapot
 save teapot.png
