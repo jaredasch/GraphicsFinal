@@ -1,4 +1,4 @@
-import mdlA
+import mdl
 from display import *
 from matrix import *
 from draw import *
